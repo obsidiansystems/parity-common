@@ -873,40 +873,6 @@ macro_rules! construct_uint {
 				x * y
 			}
 
-			/// Fast exponentiation by squaring. Returns result and overflow flag.
-			pub fn overflowing_pow(self, expon: Self) -> (Self, bool) {
-				if expon.is_zero() { return (Self::one(), false) }
-
-				let is_even = |x : &Self| x.low_u64() & 1 == 0;
-
-				let u_one = Self::one();
-				let mut y = u_one;
-				let mut n = expon;
-				let mut x = self;
-				let mut overflow = false;
-
-				while n > u_one {
-					if is_even(&n) {
-						x = $crate::overflowing!(x.overflowing_mul(x), overflow);
-						n = n >> 1usize;
-					} else {
-						y = $crate::overflowing!(x.overflowing_mul(y), overflow);
-						x = $crate::overflowing!(x.overflowing_mul(x), overflow);
-						n = (n - u_one) >> 1usize;
-					}
-				}
-				let res = $crate::overflowing!(x.overflowing_mul(y), overflow);
-				(res, overflow)
-			}
-
-			/// Checked exponentiation. Returns `None` if overflow occurred.
-			pub fn checked_pow(self, expon: $name) -> Option<$name> {
-				match self.overflowing_pow(expon) {
-					(_, true) => None,
-					(val, _) => Some(val),
-				}
-			}
-
 			/// Add with overflow.
 			#[inline(always)]
 			pub fn overflowing_add(self, other: $name) -> ($name, bool) {
