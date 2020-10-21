@@ -1,27 +1,25 @@
-[workspace]
-members = [
-	"contract-address",
-	"fixed-hash",
-	"keccak-hash",
-	"kvdb",
-	"kvdb-memorydb",
-	"kvdb-rocksdb",
-	"kvdb-shared-tests",
-	"kvdb-web",
-	"parity-bytes",
-	"parity-crypto",
-	"parity-path",
-	"plain_hasher",
-	"rlp",
-	"rlp-derive",
-	"runtime",
-	"transaction-pool",
-	"trace-time",
-	"triehash",
-	"uint",
-	"parity-util-mem",
-	"primitive-types",
-	"ethereum-types",
-	"ethbloom",
-	"parity-util-mem/derive"
-]
+[package]
+name = "rlp"
+version = "0.4.6"
+description = "Recursive-length prefix encoding, decoding, and compression"
+repository = "https://github.com/paritytech/parity-common"
+license = "MIT OR Apache-2.0"
+authors = ["Parity Technologies <admin@parity.io>"]
+edition = "2018"
+
+[dependencies]
+rustc-hex = { version = "2.0.1", default-features = false }
+
+[dev-dependencies]
+criterion = "0.3.0"
+hex-literal = "0.2.1"
+primitive-types = { path = "../primitive-types", version = "0.7", features = ["impl-rlp"] }
+
+[features]
+default = ["std"]
+std = ["rustc-hex/std"]
+
+[[bench]]
+name = "rlp"
+path = "benches/rlp.rs"
+harness = false
